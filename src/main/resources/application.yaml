@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${env.POSTGRES_URL}
+    username: ${env.POSTGRES_USERNAME}
+    password: ${env.POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  token:
+    secret: ${env.JWT_SECRET}
+    expires: 86400000
+    expire-multiplier: 4
