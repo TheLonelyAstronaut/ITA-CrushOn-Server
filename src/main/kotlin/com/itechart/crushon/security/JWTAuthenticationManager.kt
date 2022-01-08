@@ -1,0 +1,5 @@
+package com.itechart.crushon.security
+
+import org.springframework.security.authentication.ReactiveAuthenticationManager
+
+interface JWTAuthenticationManager: ReactiveAuthenticationManager

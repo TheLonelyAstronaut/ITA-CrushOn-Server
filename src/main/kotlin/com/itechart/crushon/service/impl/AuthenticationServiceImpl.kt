@@ -1,18 +1,45 @@
 package com.itechart.crushon.service.impl
 
 import com.itechart.crushon.dto.authentication.AuthenticationOutputDTO
+import com.itechart.crushon.model.auth.AuthenticationData
+import com.itechart.crushon.repository.auth.AuthenticationDataRepository
 import com.itechart.crushon.service.AuthenticationService
+import com.itechart.crushon.utils.HashEvaluator
+import com.itechart.crushon.utils.TokenProvider
 import org.springframework.stereotype.Service
 
 @Service
-class AuthenticationServiceImpl: AuthenticationService {
+class AuthenticationServiceImpl(
+    private val tokenProvider: TokenProvider,
+    private val authenticationDataRepository: AuthenticationDataRepository,
+    private val hashEvaluator: HashEvaluator
+): AuthenticationService {
+
     override fun authenticate(username: String, password: String): AuthenticationOutputDTO {
-        println(username == "test")
-        println(password == "123")
-        if(username == "test" && password == "123") {
-            return AuthenticationOutputDTO("authToken", "userData");
+        val authData = authenticationDataRepository.findAuthenticationDataByUsername(username)
+
+        authData?.let {
+            if(hashEvaluator.matches(password, authData.passwordHash)) {
+                return AuthenticationOutputDTO(
+                    authorizationToken = tokenProvider.createAuthorizationToken(username),
+                    refreshToken = tokenProvider.createRefreshToken(username),
+                )
+            }
+        }
+
+        throw Exception("Not authorized")
+    }
+
+    override fun refreshTokens(refreshToken: String): AuthenticationOutputDTO {
+        if(tokenProvider.isTokenValid(refreshToken)) {
+            val username = tokenProvider.getUsernameFromToken(refreshToken)
+
+            return AuthenticationOutputDTO(
+                authorizationToken = tokenProvider.createAuthorizationToken(username),
+                refreshToken = tokenProvider.createRefreshToken(username)
+            )
         } else {
-            throw Exception("Not authorized")
+            throw Exception("Incorrect refresh token")
         }
     }
 }

@@ -1,0 +1,5 @@
+package com.itechart.crushon.security
+
+import org.springframework.security.web.server.authentication.ServerAuthenticationConverter
+
+interface JWTAuthenticationConverter: ServerAuthenticationConverter
