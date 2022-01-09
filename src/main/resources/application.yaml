@@ -13,3 +13,13 @@ jwt:
     secret: ${env.JWT_SECRET}
     expires: 86400000
     expire-multiplier: 4
+
+amazon:
+  s3:
+    access-key: ${env.AWS_ACCESS_KEY_ID}
+    bucket-name: ${env.AWS_BUCKET_NAME}
+    region: ${env.AWS_REGION}
+    secret-key: ${env.AWS_SECRET_ACCESS_KEY}
+
+
+

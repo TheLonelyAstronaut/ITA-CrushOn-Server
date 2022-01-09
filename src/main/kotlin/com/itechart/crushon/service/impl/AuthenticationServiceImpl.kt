@@ -1,8 +1,8 @@
 package com.itechart.crushon.service.impl
 
 import com.itechart.crushon.dto.authentication.AuthenticationOutputDTO
-import com.itechart.crushon.model.auth.AuthenticationData
-import com.itechart.crushon.repository.auth.AuthenticationDataRepository
+import com.itechart.crushon.model.AuthenticationData
+import com.itechart.crushon.repository.AuthenticationDataRepository
 import com.itechart.crushon.service.AuthenticationService
 import com.itechart.crushon.utils.HashEvaluator
 import com.itechart.crushon.utils.TokenProvider
@@ -28,6 +28,12 @@ class AuthenticationServiceImpl(
         }
 
         throw Exception("Not authorized")
+    }
+
+    override fun createAuthenticationRecord(username: String, password: String) {
+        val data = AuthenticationData(username, hashEvaluator.encode(password))
+
+        authenticationDataRepository.save(data)
     }
 
     override fun refreshTokens(refreshToken: String): AuthenticationOutputDTO {

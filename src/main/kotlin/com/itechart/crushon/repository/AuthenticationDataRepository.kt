@@ -1,6 +1,6 @@
-package com.itechart.crushon.repository.auth
+package com.itechart.crushon.repository
 
-import com.itechart.crushon.model.auth.AuthenticationData
+import com.itechart.crushon.model.AuthenticationData
 import org.springframework.data.repository.CrudRepository
 
 interface AuthenticationDataRepository: CrudRepository<AuthenticationData, Long> {

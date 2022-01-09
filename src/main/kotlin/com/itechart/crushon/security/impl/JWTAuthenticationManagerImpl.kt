@@ -1,5 +1,6 @@
 package com.itechart.crushon.security.impl
 
+import com.itechart.crushon.repository.UserRepository
 import com.itechart.crushon.security.JWTAuthenticationManager
 import com.itechart.crushon.utils.TokenProvider
 import kotlinx.coroutines.flow.filter
@@ -16,23 +17,28 @@ import reactor.core.publisher.Mono
 
 @Component
 class JWTAuthenticationManagerImpl(
-    private val tokenProvider: TokenProvider
+    private val tokenProvider: TokenProvider,
+    private val userRepository: UserRepository
 ): JWTAuthenticationManager {
     override fun authenticate(authentication: Authentication?): Mono<Authentication> = mono {
         flowOf(authentication)
             .filter { it != null }
             .map { tokenProvider.validateToken(it!!.credentials as String) }
             .map {
-                val up = UsernamePasswordAuthenticationToken(
-                    it.body,
-                    authentication!!.credentials as String,
-                    mutableListOf(SimpleGrantedAuthority("ROLE_USER"))
-                )
+                val user = userRepository.findUserByUsername(it.body.subject)
 
-                val sc = SecurityContextHolder.getContext()
-                sc.authentication = up
+                user?.let {
+                    val up = UsernamePasswordAuthenticationToken(
+                        user,
+                        authentication!!.credentials as String,
+                        mutableListOf(SimpleGrantedAuthority("ROLE_USER"))
+                    )
 
-                up
+                    val sc = SecurityContextHolder.getContext()
+                    sc.authentication = up
+
+                    up
+                }
             }
             .first()
     }

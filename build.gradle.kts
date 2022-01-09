@@ -29,6 +29,7 @@ dependencies {
 
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 	implementation("me.paulschwarz:spring-dotenv:2.3.0")
+	implementation("com.amazonaws:aws-java-sdk:1.12.136")
 	runtimeOnly("org.postgresql:postgresql")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

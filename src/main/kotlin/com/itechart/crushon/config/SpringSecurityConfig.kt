@@ -20,6 +20,9 @@ class SpringSecurityConfig(
     private val entryPoint: RestAuthenticationEntryPoint
 ) {
     private val authenticationEndpoint: String = "/api/v1/auth/**"
+    private val uploadEndpoint: String = "/api/v1/upload/**"
+    private val passionsEndpoint: String = "/api/v1/explore/passions"
+    private val citiesEndpoint: String = "/api/v1/explore/cities"
 
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
@@ -28,7 +31,7 @@ class SpringSecurityConfig(
 
         return http
             .authorizeExchange()
-            .pathMatchers(authenticationEndpoint)
+            .pathMatchers(authenticationEndpoint, uploadEndpoint, passionsEndpoint, citiesEndpoint)
             .permitAll()
             .anyExchange()
             .authenticated()
