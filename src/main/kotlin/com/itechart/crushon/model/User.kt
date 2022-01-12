@@ -9,7 +9,7 @@ import javax.persistence.*
 class User(
     var username: String,
     var name: String,
-    @OneToOne
+    @ManyToOne
     var photo: File,
     var bio: String,
     var dateOfBirth: Long,
