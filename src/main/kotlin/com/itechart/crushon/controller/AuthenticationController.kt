@@ -34,10 +34,10 @@ class AuthenticationController (
         userService.createUser(CreateUserInputDTO(
             username = data.username,
             name = data.name,
-            photo = data.photo,
             bio = data.bio,
-            age = data.age,
-            city = data.city
+            dateOfBirth = data.dateOfBirth,
+            city = data.city,
+            gender = data.gender
         ))
 
         return authenticationService.authenticate(data.username, data.password)

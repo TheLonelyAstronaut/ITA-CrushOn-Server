@@ -1,6 +1,7 @@
 package com.itechart.crushon.model
 
 import com.itechart.crushon.model.core.BaseEntity
+import com.itechart.crushon.utils.Gender
 import javax.persistence.*
 
 @Entity
@@ -11,7 +12,8 @@ class User(
     @OneToOne
     var photo: File,
     var bio: String,
-    var age: Long,
+    var dateOfBirth: Long,
+    var gender: Gender,
     @ManyToMany(fetch = FetchType.EAGER)
     var passions: MutableList<Passion>? = mutableListOf(),
     @ManyToOne

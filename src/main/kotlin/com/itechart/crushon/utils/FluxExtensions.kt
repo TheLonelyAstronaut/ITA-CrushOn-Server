@@ -15,7 +15,7 @@ fun Flux<DataBuffer>.toInputStream(): InputStream {
     val isPipe = PipedInputStream(osPipe)
 
     DataBufferUtils.write(this, osPipe)
-        .subscribeOn(Schedulers.elastic())
+        .subscribeOn(Schedulers.boundedElastic())
         .doOnComplete {
             try {
                 osPipe.close()

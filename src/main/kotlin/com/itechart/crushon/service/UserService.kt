@@ -5,4 +5,5 @@ import com.itechart.crushon.model.User
 
 interface UserService {
     fun createUser(data: CreateUserInputDTO): User
+    fun setPhoto(user: User, photoId: Long): Long
 }
