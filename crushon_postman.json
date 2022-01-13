@@ -1,0 +1,514 @@
+{
+	"info": {
+		"_postman_id": "e317f6f2-f92f-4b73-bd54-c201c665a37b",
+		"name": "CrushOn",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Astro\",\n    \"password\": \"Astro\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh tokens",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4NDQwNiwiZXhwIjoxNjQyNDMwMDA2fQ.KyLC5krHo8blSWIdxHqU98RO8DBLpj_X8xP53OJ-tpY\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/refresh_tokens",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"refresh_tokens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data;",
+						"type": "default",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjAyMDg5MCwiZXhwIjoxNjQyMTA3MjkwfQ.uVyoy81IAO0Kyty4uE7ydD6d0YyCAewMRLhVT79kBbk",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Astro\",\n    \"password\": \"Astro\",\n    \"name\": \"Vadzim\",\n    \"city\": 1,\n    \"gender\": \"male\",\n    \"dateOfBirth\": 990798918303,\n    \"bio\": \"Mock\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get cities",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/explore/cities",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"explore",
+						"cities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get passions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/explore/passions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"explore",
+						"passions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user data",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user data",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bio\": \"Hey babe\",\n    \"photo\": 1,\n    \"passions\": [1, 2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/update_settings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"update_settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get matches",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/matches",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"matches"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload photo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/lonelyastronaut/Downloads/_33c-wRMt6c.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set user photo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"photoId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/user/set_photo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"set_photo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Explore",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pageSize\": 10,\n    \"pageNumber\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/explore",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"explore"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add reaction",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": 1,\n    \"reaction\": \"like\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/explore/react",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"explore",
+						"react"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get chat list",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/chats",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"chats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get chat messages",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"chatId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/chats/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"chats",
+						"messages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send message",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJBc3RybyIsImlhdCI6MTY0MjA4MjIwNywiZXhwIjoxNjQyMTY4NjA3fQ.ZZ-8QxXxMOglslomxaSsasCqkUVIzvsrMvir99XCRmA",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"chatId\": 1,\n    \"message\": \"Bruh\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/chats/send",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"chats",
+						"send"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
