@@ -5,5 +5,7 @@ import javax.persistence.Entity
 
 @Entity
 class Passion(
-    val text: String
+    val en: String,
+    val be: String,
+    val ru: String
 ): BaseEntity<Long>()

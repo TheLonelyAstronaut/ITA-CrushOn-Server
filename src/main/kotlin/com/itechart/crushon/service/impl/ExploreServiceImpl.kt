@@ -5,6 +5,8 @@ import com.itechart.crushon.model.Passion
 import com.itechart.crushon.model.User
 import com.itechart.crushon.repository.CityRepository
 import com.itechart.crushon.repository.PassionRepository
+import com.itechart.crushon.repository.ReactionRepository
+import com.itechart.crushon.repository.ViewRepository
 import com.itechart.crushon.service.ExploreService
 import com.itechart.crushon.utils.Reactions
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +17,10 @@ import org.springframework.stereotype.Service
 @Service
 class ExploreServiceImpl(
     private val cityRepository: CityRepository,
-    private val passionRepository: PassionRepository
+    private val passionRepository: PassionRepository,
+    private val userRepository: PassionRepository,
+    private val viewRepository: ViewRepository,
+    private val reactionRepository: ReactionRepository
 ): ExploreService {
     override fun getCities(): Flow<City> = cityRepository.findAll().asFlow()
 

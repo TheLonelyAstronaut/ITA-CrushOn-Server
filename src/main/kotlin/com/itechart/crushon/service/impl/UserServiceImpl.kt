@@ -40,46 +40,42 @@ class UserServiceImpl(
     }
 
     override fun setPhoto(user: User, photoId: Long): Long {
-        val dbUser = userRepository.findUserByUsername(user.username)
-
         try {
-            dbUser?.photo = fileRepository.findFileById(photoId)
-            userRepository.save(dbUser!!)
+            user.photo = fileRepository.findFileById(photoId)
+            userRepository.save(user)
 
-            return dbUser.photo.id!!
+            return user.photo.id!!
         } catch (e: Exception) {
             throw e
         }
     }
 
     override fun updateUser(user: User, data: UpdateUserDTO): User {
-        val dbUser = userRepository.findUserByUsername(user.username)!!
-
         data.bio?.let {
-            dbUser.bio = it
+            user.bio = it
         }
 
         data.photo?.let {
-            dbUser.photo = fileRepository.findFileById(it)
+            user.photo = fileRepository.findFileById(it)
         }
 
         data.city?.let {
-            dbUser.city = cityRepository.findCityById(it)
+            user.city = cityRepository.findCityById(it)
         }
 
         data.passions?.let {
-            dbUser.passions = passionRepository
+            user.passions = passionRepository
                 .findAllById(data.passions)
                 .toMutableList()
         }
 
         data.dateOfBirth?.let {
-            dbUser.dateOfBirth = it
+            user.dateOfBirth = it
         }
 
-        userRepository.save(dbUser)
+        userRepository.save(user)
 
-        return dbUser
+        return user
     }
 
     override fun getMatches(user: User): Flow<Match> = flow {

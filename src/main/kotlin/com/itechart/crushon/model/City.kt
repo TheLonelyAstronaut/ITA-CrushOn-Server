@@ -5,5 +5,7 @@ import javax.persistence.Entity
 
 @Entity
 class City (
-    val name: String
+    val en: String,
+    val be: String,
+    val ru: String
 ): BaseEntity<Long>()
