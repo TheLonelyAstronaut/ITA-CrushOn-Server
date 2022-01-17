@@ -18,4 +18,10 @@ class User(
     var passions: MutableList<Passion>? = mutableListOf(),
     @ManyToOne
     var city: City
-): BaseEntity<Long>()
+): BaseEntity<Long>() {
+
+    @Transient
+    fun getPreferredGender() =
+        if(this.gender == Gender.MALE) Gender.FEMALE
+        else Gender.MALE
+}

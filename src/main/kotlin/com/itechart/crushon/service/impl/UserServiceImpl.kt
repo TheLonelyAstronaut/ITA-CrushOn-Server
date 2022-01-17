@@ -4,14 +4,14 @@ import com.itechart.crushon.dto.user.CreateUserInputDTO
 import com.itechart.crushon.dto.user.UpdateUserDTO
 import com.itechart.crushon.model.Match
 import com.itechart.crushon.model.User
-import com.itechart.crushon.repository.CityRepository
-import com.itechart.crushon.repository.FileRepository
-import com.itechart.crushon.repository.PassionRepository
-import com.itechart.crushon.repository.UserRepository
+import com.itechart.crushon.repository.*
 import com.itechart.crushon.service.UserService
 import com.itechart.crushon.utils.Gender
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.merge
 import org.springframework.stereotype.Service
 import java.lang.Exception
 
@@ -20,7 +20,8 @@ class UserServiceImpl(
     private val userRepository: UserRepository,
     private val fileRepository: FileRepository,
     private val cityRepository: CityRepository,
-    private val passionRepository: PassionRepository
+    private val passionRepository: PassionRepository,
+    private val matchRepository: MatchRepository
 ): UserService {
 
     override fun createUser(data: CreateUserInputDTO): User {
@@ -78,9 +79,10 @@ class UserServiceImpl(
         return user
     }
 
-    override fun getMatches(user: User): Flow<Match> = flow {
-        emit(Match(first = user, second = user))
-        emit(Match(first = user, second = user))
-        emit(Match(first = user, second = user))
-    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getMatches(user: User): Flow<Match> =
+        merge(
+            matchRepository.getMatchesByFirst(user).asFlow(),
+            matchRepository.getMatchesBySecond(user).asFlow()
+        )
 }

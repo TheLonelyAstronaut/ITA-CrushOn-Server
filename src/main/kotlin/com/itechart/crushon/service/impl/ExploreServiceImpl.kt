@@ -1,18 +1,21 @@
 package com.itechart.crushon.service.impl
 
-import com.itechart.crushon.model.City
-import com.itechart.crushon.model.Passion
-import com.itechart.crushon.model.User
+import com.itechart.crushon.model.*
 import com.itechart.crushon.repository.CityRepository
 import com.itechart.crushon.repository.PassionRepository
 import com.itechart.crushon.repository.ReactionRepository
 import com.itechart.crushon.repository.ViewRepository
 import com.itechart.crushon.service.ExploreService
+import com.itechart.crushon.utils.Gender
 import com.itechart.crushon.utils.Reactions
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.reactive.asFlow
+import org.hibernate.Criteria
+import org.hibernate.SessionFactory
 import org.springframework.stereotype.Service
+import reactor.kotlin.core.publisher.toFlux
+import javax.persistence.criteria.*
+import javax.transaction.Transactional
 
 @Service
 class ExploreServiceImpl(
@@ -20,19 +23,93 @@ class ExploreServiceImpl(
     private val passionRepository: PassionRepository,
     private val userRepository: PassionRepository,
     private val viewRepository: ViewRepository,
-    private val reactionRepository: ReactionRepository
+    private val reactionRepository: ReactionRepository,
+    private val sessionFactory: SessionFactory
 ): ExploreService {
     override fun getCities(): Flow<City> = cityRepository.findAll().asFlow()
 
     override fun getPassions(): Flow<Passion> = passionRepository.findAll().asFlow()
 
-    override fun exploreNewPeople(user: User, pageSize: Long, pageNumber: Long): Flow<User>  = flow {
-        emit(user)
-        emit(user)
-        emit(user)
+    @Transactional
+    override fun exploreNewPeople(user: User): Flow<User> {
+        val session = sessionFactory.openSession()
+
+        val criteria = session.criteriaBuilder.createQuery(User::class.java)
+        val userRoot = criteria.from(User::class.java)
+
+        val reactionsSubquery = generateConstraintSubquery(
+            criteria,
+            session.criteriaBuilder,
+            Reaction::class.java,
+            "target",
+            "viewer",
+            user.id
+        )
+
+        val firstSideMatchesSubquery = generateConstraintSubquery(
+            criteria,
+            session.criteriaBuilder,
+            Match::class.java,
+            "first",
+            "second",
+            user.id
+        )
+
+        val secondSideMatchesSubquery = generateConstraintSubquery(
+            criteria,
+            session.criteriaBuilder,
+            Match::class.java,
+            "second",
+            "first",
+            user.id
+        )
+
+        val viewsSubquery = generateConstraintSubquery(
+            criteria,
+            session.criteriaBuilder,
+            View::class.java,
+            "target",
+            "viewer",
+            user.id
+        )
+
+        criteria.select(userRoot)
+        criteria.where(
+            session.criteriaBuilder.equal(userRoot.get<Int>("gender"), user.getPreferredGender()),
+            session.criteriaBuilder.notEqual(userRoot.get<Long>("id"), session.criteriaBuilder.all(reactionsSubquery)),
+            session.criteriaBuilder.notEqual(userRoot.get<Long>("id"), session.criteriaBuilder.all(firstSideMatchesSubquery)),
+            session.criteriaBuilder.notEqual(userRoot.get<Long>("id"), session.criteriaBuilder.all(secondSideMatchesSubquery)),
+            session.criteriaBuilder.notEqual(userRoot.get<Long>("id"), session.criteriaBuilder.all(viewsSubquery))
+        )
+
+        return session
+            .createQuery(criteria)
+            .setMaxResults(10)
+            .resultStream
+            .toFlux()
+            .asFlow()
     }
 
     override fun addReaction(user: User, reactTo: Long, reaction: Reactions): Boolean {
        return (Math.random() * 10).toInt() % 2 == 0
     }
+
+    private fun <X> generateConstraintSubquery(criteria: CriteriaQuery<User>,
+                                                  criteriaBuilder: CriteriaBuilder,
+                                                  clazz: Class<X>,
+                                                  selectFrom: String,
+                                                  compareWith: String,
+                                                  toCompare: Long?): Subquery<Long> {
+
+        val subquery = criteria.subquery(Long::class.java)
+        val root = subquery.from(clazz)
+
+        subquery.select(root.get<Any>(selectFrom).get("id"))
+        subquery.where(
+            criteriaBuilder.equal(root.get<Any>(compareWith).get<Long>("id"), toCompare)
+        )
+
+        return subquery
+    }
 }
+

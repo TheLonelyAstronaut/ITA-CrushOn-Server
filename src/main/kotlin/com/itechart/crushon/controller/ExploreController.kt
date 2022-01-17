@@ -24,8 +24,8 @@ class ExploreController(
     fun getPassions(): Flow<Passion> = exploreService.getPassions()
 
     @GetMapping
-    fun exploreNewPeople(@AuthenticationPrincipal user: User, @RequestBody data: ExploreNewPeopleDTO): Flow<User> =
-        exploreService.exploreNewPeople(user, data.pageSize, data.pageNumber)
+    fun exploreNewPeople(@AuthenticationPrincipal user: User): Flow<User> =
+        exploreService.exploreNewPeople(user)
 
     @PostMapping("/react")
     fun addReaction(@AuthenticationPrincipal user: User, @RequestBody data: AddReactionInputDTO): AddReactionOutputDTO {

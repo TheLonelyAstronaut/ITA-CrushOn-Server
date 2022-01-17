@@ -9,6 +9,6 @@ import kotlinx.coroutines.flow.Flow
 interface ExploreService {
     fun getCities(): Flow<City>
     fun getPassions(): Flow<Passion>
-    fun exploreNewPeople(user: User, pageSize: Long, pageNumber: Long): Flow<User>
+    fun exploreNewPeople(user: User): Flow<User>
     fun addReaction(user: User, reactTo: Long, reaction: Reactions): Boolean
 }
