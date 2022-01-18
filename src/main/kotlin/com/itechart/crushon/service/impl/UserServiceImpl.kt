@@ -6,7 +6,7 @@ import com.itechart.crushon.model.Match
 import com.itechart.crushon.model.User
 import com.itechart.crushon.repository.*
 import com.itechart.crushon.service.UserService
-import com.itechart.crushon.utils.Gender
+import com.itechart.crushon.utils.enums.Gender
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow

@@ -1,4 +1,4 @@
-package com.itechart.crushon.utils
+package com.itechart.crushon.utils.hasher
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder

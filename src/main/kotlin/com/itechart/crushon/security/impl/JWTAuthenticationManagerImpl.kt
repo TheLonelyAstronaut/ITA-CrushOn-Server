@@ -2,7 +2,7 @@ package com.itechart.crushon.security.impl
 
 import com.itechart.crushon.repository.UserRepository
 import com.itechart.crushon.security.JWTAuthenticationManager
-import com.itechart.crushon.utils.TokenProvider
+import com.itechart.crushon.utils.token.TokenProvider
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf

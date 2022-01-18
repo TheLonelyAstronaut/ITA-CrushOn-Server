@@ -1,4 +1,4 @@
-package com.itechart.crushon.utils
+package com.itechart.crushon.utils.enums
 
 enum class Reactions(
     private val fromString: String

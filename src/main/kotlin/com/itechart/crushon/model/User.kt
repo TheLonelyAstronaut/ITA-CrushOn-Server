@@ -1,7 +1,7 @@
 package com.itechart.crushon.model
 
 import com.itechart.crushon.model.core.BaseEntity
-import com.itechart.crushon.utils.Gender
+import com.itechart.crushon.utils.enums.Gender
 import javax.persistence.*
 
 @Entity

@@ -1,4 +1,4 @@
-package com.itechart.crushon.utils
+package com.itechart.crushon.utils.token
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws

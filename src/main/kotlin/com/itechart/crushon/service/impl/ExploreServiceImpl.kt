@@ -4,8 +4,8 @@ import com.itechart.crushon.dto.explore.AddReactionOutputDTO
 import com.itechart.crushon.model.*
 import com.itechart.crushon.repository.*
 import com.itechart.crushon.service.ExploreService
-import com.itechart.crushon.utils.Gender
-import com.itechart.crushon.utils.Reactions
+import com.itechart.crushon.utils.enums.Gender
+import com.itechart.crushon.utils.enums.Reactions
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.reactive.asFlow
 import org.hibernate.Criteria

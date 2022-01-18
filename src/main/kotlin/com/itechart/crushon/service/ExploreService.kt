@@ -4,7 +4,7 @@ import com.itechart.crushon.dto.explore.AddReactionOutputDTO
 import com.itechart.crushon.model.City
 import com.itechart.crushon.model.Passion
 import com.itechart.crushon.model.User
-import com.itechart.crushon.utils.Reactions
+import com.itechart.crushon.utils.enums.Reactions
 import kotlinx.coroutines.flow.Flow
 
 interface ExploreService {

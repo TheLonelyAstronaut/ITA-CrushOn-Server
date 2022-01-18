@@ -4,8 +4,8 @@ import com.itechart.crushon.dto.authentication.AuthenticationOutputDTO
 import com.itechart.crushon.model.AuthenticationData
 import com.itechart.crushon.repository.AuthenticationDataRepository
 import com.itechart.crushon.service.AuthenticationService
-import com.itechart.crushon.utils.HashEvaluator
-import com.itechart.crushon.utils.TokenProvider
+import com.itechart.crushon.utils.hasher.HashEvaluator
+import com.itechart.crushon.utils.token.TokenProvider
 import org.springframework.stereotype.Service
 
 @Service

@@ -1,6 +1,6 @@
-package com.itechart.crushon.utils.impl
+package com.itechart.crushon.utils.token.impl
 
-import com.itechart.crushon.utils.TokenProvider
+import com.itechart.crushon.utils.token.TokenProvider
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
