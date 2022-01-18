@@ -1,10 +1,8 @@
 package com.itechart.crushon.service.impl
 
+import com.itechart.crushon.dto.explore.AddReactionOutputDTO
 import com.itechart.crushon.model.*
-import com.itechart.crushon.repository.CityRepository
-import com.itechart.crushon.repository.PassionRepository
-import com.itechart.crushon.repository.ReactionRepository
-import com.itechart.crushon.repository.ViewRepository
+import com.itechart.crushon.repository.*
 import com.itechart.crushon.service.ExploreService
 import com.itechart.crushon.utils.Gender
 import com.itechart.crushon.utils.Reactions
@@ -12,6 +10,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.reactive.asFlow
 import org.hibernate.Criteria
 import org.hibernate.SessionFactory
+import org.hibernate.criterion.Restrictions
 import org.springframework.stereotype.Service
 import reactor.kotlin.core.publisher.toFlux
 import javax.persistence.criteria.*
@@ -21,10 +20,12 @@ import javax.transaction.Transactional
 class ExploreServiceImpl(
     private val cityRepository: CityRepository,
     private val passionRepository: PassionRepository,
-    private val userRepository: PassionRepository,
+    private val userRepository: UserRepository,
     private val viewRepository: ViewRepository,
     private val reactionRepository: ReactionRepository,
-    private val sessionFactory: SessionFactory
+    private val matchRepository: MatchRepository,
+    private val sessionFactory: SessionFactory,
+    private val chatRepository: ChatRepository
 ): ExploreService {
     override fun getCities(): Flow<City> = cityRepository.findAll().asFlow()
 
@@ -82,16 +83,50 @@ class ExploreServiceImpl(
             session.criteriaBuilder.notEqual(userRoot.get<Long>("id"), session.criteriaBuilder.all(viewsSubquery))
         )
 
+        criteria.orderBy(session.criteriaBuilder.asc(session.criteriaBuilder.function("RAND", Long::class.java)))
+
         return session
             .createQuery(criteria)
-            .setMaxResults(10)
+            .setMaxResults(3)
             .resultStream
             .toFlux()
             .asFlow()
+            .map {
+                val view = View(user, it)
+                viewRepository.save(view)
+
+                it
+            }
     }
 
-    override fun addReaction(user: User, reactTo: Long, reaction: Reactions): Boolean {
-       return (Math.random() * 10).toInt() % 2 == 0
+    override fun addReaction(user: User, reactTo: Long, reaction: Reactions): AddReactionOutputDTO {
+        val dbReactTo = userRepository.findById(reactTo).get()
+        val dbReaction = reactionRepository.getReactionByViewer(dbReactTo)
+
+        reactionRepository.save(Reaction(user, dbReactTo, reaction))
+        viewRepository.delete(viewRepository.findByViewerAndTarget(user, dbReactTo))
+
+        return if(dbReaction != null) {
+            if(dbReaction.reaction == reaction && reaction == Reactions.LIKE) {
+                matchRepository.save(Match(user, dbReactTo))
+                chatRepository.save(Chat(user, dbReactTo))
+
+                AddReactionOutputDTO(
+                    true,
+                    dbReactTo
+                )
+            } else {
+                AddReactionOutputDTO(
+                    false,
+                    dbReactTo
+                )
+            }
+        } else {
+            AddReactionOutputDTO(
+                false,
+                dbReactTo
+            )
+        }
     }
 
     private fun <X> generateConstraintSubquery(criteria: CriteriaQuery<User>,

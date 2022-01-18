@@ -28,14 +28,11 @@ class ExploreController(
         exploreService.exploreNewPeople(user)
 
     @PostMapping("/react")
-    fun addReaction(@AuthenticationPrincipal user: User, @RequestBody data: AddReactionInputDTO): AddReactionOutputDTO {
-        return AddReactionOutputDTO(
-            isMatch = exploreService
-                .addReaction(
-                    user,
-                    data.userId,
-                    Reactions.fromString(data.reaction)
-                )
-        )
-    }
+    fun addReaction(@AuthenticationPrincipal user: User, @RequestBody data: AddReactionInputDTO): AddReactionOutputDTO =
+        exploreService
+            .addReaction(
+                user,
+                data.userId,
+                Reactions.fromString(data.reaction)
+            )
 }
