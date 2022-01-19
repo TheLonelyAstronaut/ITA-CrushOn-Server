@@ -14,10 +14,8 @@ class WebSocketConfig(
 ) {
     @Bean
     fun handlerMapping(): HandlerMapping {
-        val path = "/push"
+        val path = "/api/v1/ws/chat"
         val map = mutableMapOf(path to webSocketHandler)
-
-        println(map)
 
         return SimpleUrlHandlerMapping(map, 1)
     }

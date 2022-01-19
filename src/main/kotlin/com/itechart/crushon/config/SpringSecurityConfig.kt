@@ -22,6 +22,8 @@ class SpringSecurityConfig(
     private val authenticationEndpoint: String = "/api/v1/auth/**"
     private val passionsEndpoint: String = "/api/v1/explore/passions"
     private val citiesEndpoint: String = "/api/v1/explore/cities"
+    // Will handle tokens manually
+    private val ws = "/api/v1/ws/*"
 
     @Bean
     fun securityWebFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
@@ -30,7 +32,7 @@ class SpringSecurityConfig(
 
         return http
             .authorizeExchange()
-            .pathMatchers(authenticationEndpoint, passionsEndpoint, citiesEndpoint)
+            .pathMatchers(authenticationEndpoint, passionsEndpoint, citiesEndpoint, ws)
             .permitAll()
             .anyExchange()
             .authenticated()
