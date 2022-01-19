@@ -31,7 +31,7 @@ class ChatServiceImpl(
         val receiver = if(chat.firstUser.id === user.id) chat.secondUser else chat.firstUser
 
         pool.send(receiver.id!!, ObjectMapper().writeValueAsString(dbMessage))
-        firebaseProvider.cloudMessaging.sendNotification(user, dbMessage)
+        firebaseProvider.cloudMessaging.sendNotification(receiver, dbMessage)
 
         return Date().time
     }

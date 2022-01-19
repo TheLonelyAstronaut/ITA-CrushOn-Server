@@ -6,4 +6,5 @@ import org.springframework.data.repository.CrudRepository
 
 interface ReactionRepository: CrudRepository<Reaction, Long> {
     fun getReactionByViewer(viewer: User): Reaction?
+    fun getReactionByViewerAndTarget(viewer: User, target: User): Reaction?
 }

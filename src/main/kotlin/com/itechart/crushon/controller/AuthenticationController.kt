@@ -1,9 +1,6 @@
 package com.itechart.crushon.controller
 
-import com.itechart.crushon.dto.authentication.AuthenticationInputDTO
-import com.itechart.crushon.dto.authentication.AuthenticationOutputDTO
-import com.itechart.crushon.dto.authentication.RefreshTokensInputDTO
-import com.itechart.crushon.dto.authentication.RegistrationInputDTO
+import com.itechart.crushon.dto.authentication.*
 import com.itechart.crushon.dto.common.TokenCrudDTO
 import com.itechart.crushon.dto.user.CreateUserInputDTO
 import com.itechart.crushon.model.User
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import java.util.*
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -29,10 +27,12 @@ class AuthenticationController (
         authenticationService.authenticate(data.username, data.password)
 
     @PostMapping("/logout")
-    fun logout(@AuthenticationPrincipal user: User, @RequestBody data: TokenCrudDTO): Mono<ServerResponse> {
-        authenticationService.logout(user, data.token)
+    fun logout(@AuthenticationPrincipal user: User, @RequestBody data: TokenCrudDTO): LogoutOutputDTO {
+        authenticationService.logout(user, data.firebaseToken)
 
-        return ServerResponse.ok().build()
+        return LogoutOutputDTO(
+            timestamp = Date().time
+        )
     }
 
     @PostMapping("/refresh_tokens")

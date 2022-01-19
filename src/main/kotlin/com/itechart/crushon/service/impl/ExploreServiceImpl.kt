@@ -103,10 +103,13 @@ class ExploreServiceImpl(
 
     override fun addReaction(user: User, reactTo: Long, reaction: Reactions): AddReactionOutputDTO {
         val dbReactTo = userRepository.findById(reactTo).get()
-        val dbReaction = reactionRepository.getReactionByViewer(dbReactTo)
+        val dbReaction = reactionRepository.getReactionByViewerAndTarget(dbReactTo, user)
 
         reactionRepository.save(Reaction(user, dbReactTo, reaction))
-        viewRepository.delete(viewRepository.findByViewerAndTarget(user, dbReactTo))
+
+        viewRepository.findByViewerAndTarget(user, dbReactTo)?.let {
+            viewRepository.delete(it)
+        }
 
         return if(dbReaction != null) {
             if(dbReaction.reaction == reaction && reaction == Reactions.LIKE) {

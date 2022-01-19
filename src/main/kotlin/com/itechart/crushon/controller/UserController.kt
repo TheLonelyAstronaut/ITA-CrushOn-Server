@@ -1,6 +1,7 @@
 package com.itechart.crushon.controller
 
 import com.itechart.crushon.dto.common.TokenCrudDTO
+import com.itechart.crushon.dto.user.SetFirebaseTokenOutputDTO
 import com.itechart.crushon.dto.user.UpdatePhotoDTO
 import com.itechart.crushon.dto.user.UpdateUserDTO
 import com.itechart.crushon.model.Match
@@ -11,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import java.util.*
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -26,10 +28,12 @@ class UserController(
         userService.setPhoto(user, data.photoId)
 
     @PostMapping("/set_firebase_token")
-    fun setFirebaseToken(@AuthenticationPrincipal user: User, @RequestBody data: TokenCrudDTO): Mono<ServerResponse> {
-        userService.setFirebaseToken(user, data.token)
+    fun setFirebaseToken(@AuthenticationPrincipal user: User, @RequestBody data: TokenCrudDTO): SetFirebaseTokenOutputDTO {
+        userService.setFirebaseToken(user, data.firebaseToken)
 
-        return ServerResponse.ok().build()
+        return SetFirebaseTokenOutputDTO(
+            timestamp = Date().time
+        )
     }
 
     @PostMapping("/update_settings")
