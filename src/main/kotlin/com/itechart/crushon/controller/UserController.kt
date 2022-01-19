@@ -1,5 +1,6 @@
 package com.itechart.crushon.controller
 
+import com.itechart.crushon.dto.common.TokenCrudDTO
 import com.itechart.crushon.dto.user.UpdatePhotoDTO
 import com.itechart.crushon.dto.user.UpdateUserDTO
 import com.itechart.crushon.model.Match
@@ -8,6 +9,8 @@ import com.itechart.crushon.service.UserService
 import kotlinx.coroutines.flow.Flow
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.reactive.function.server.ServerResponse
+import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -15,15 +18,18 @@ class UserController(
     private val userService: UserService
 ) {
     @GetMapping
-    fun getUser(@AuthenticationPrincipal user: User) = user
+    fun getUser(@AuthenticationPrincipal user: User) =
+        user
 
     @PostMapping("/set_photo")
-    fun setPhoto(@AuthenticationPrincipal user: User, @RequestBody data: UpdatePhotoDTO): Long =
+    fun setPhoto(@AuthenticationPrincipal user: User, @RequestBody data: UpdatePhotoDTO) =
         userService.setPhoto(user, data.photoId)
 
     @PostMapping("/set_firebase_token")
-    fun setFirebaseToken(@AuthenticationPrincipal user: User) {
-        // add token to firebase repository
+    fun setFirebaseToken(@AuthenticationPrincipal user: User, @RequestBody data: TokenCrudDTO): Mono<ServerResponse> {
+        userService.setFirebaseToken(user, data.token)
+
+        return ServerResponse.ok().build()
     }
 
     @PostMapping("/update_settings")
@@ -31,6 +37,6 @@ class UserController(
         userService.updateUser(user, data)
 
     @GetMapping("/matches")
-    fun getMatches(@AuthenticationPrincipal user: User): Flow<Match> =
+    fun getMatches(@AuthenticationPrincipal user: User) =
         userService.getMatches(user)
 }

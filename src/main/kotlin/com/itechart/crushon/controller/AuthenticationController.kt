@@ -4,6 +4,7 @@ import com.itechart.crushon.dto.authentication.AuthenticationInputDTO
 import com.itechart.crushon.dto.authentication.AuthenticationOutputDTO
 import com.itechart.crushon.dto.authentication.RefreshTokensInputDTO
 import com.itechart.crushon.dto.authentication.RegistrationInputDTO
+import com.itechart.crushon.dto.common.TokenCrudDTO
 import com.itechart.crushon.dto.user.CreateUserInputDTO
 import com.itechart.crushon.model.User
 import com.itechart.crushon.service.AuthenticationService
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.reactive.function.server.ServerResponse
+import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -26,8 +29,10 @@ class AuthenticationController (
         authenticationService.authenticate(data.username, data.password)
 
     @PostMapping("/logout")
-    fun logout(@AuthenticationPrincipal user: User) {
-        // remove token from firebase repository
+    fun logout(@AuthenticationPrincipal user: User, @RequestBody data: TokenCrudDTO): Mono<ServerResponse> {
+        authenticationService.logout(user, data.token)
+
+        return ServerResponse.ok().build()
     }
 
     @PostMapping("/refresh_tokens")

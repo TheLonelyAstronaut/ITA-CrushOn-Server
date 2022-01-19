@@ -1,7 +1,9 @@
 package com.itechart.crushon.service.impl
 
 import com.itechart.crushon.dto.authentication.AuthenticationOutputDTO
+import com.itechart.crushon.integrations.firebase.FirebaseProvider
 import com.itechart.crushon.model.AuthenticationData
+import com.itechart.crushon.model.User
 import com.itechart.crushon.repository.AuthenticationDataRepository
 import com.itechart.crushon.service.AuthenticationService
 import com.itechart.crushon.utils.hasher.HashEvaluator
@@ -12,7 +14,8 @@ import org.springframework.stereotype.Service
 class AuthenticationServiceImpl(
     private val tokenProvider: TokenProvider,
     private val authenticationDataRepository: AuthenticationDataRepository,
-    private val hashEvaluator: HashEvaluator
+    private val hashEvaluator: HashEvaluator,
+    private val firebaseProvider: FirebaseProvider
 ): AuthenticationService {
 
     override fun authenticate(username: String, password: String): AuthenticationOutputDTO {
@@ -47,5 +50,9 @@ class AuthenticationServiceImpl(
         } else {
             throw Exception("Incorrect refresh token")
         }
+    }
+
+    override fun logout(user: User, firebaseToken: String) {
+        firebaseProvider.cloudMessaging.removePushToken(user, firebaseToken)
     }
 }

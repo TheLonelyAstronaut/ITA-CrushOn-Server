@@ -12,12 +12,21 @@ class CloudMessagingProviderImpl(
 ): CloudMessagingProvider {
 
     override fun sendNotification(user: User, data: Any) {
-        TODO("Not yet implemented")
+        val pushTokens = pushTokenRepository.findByOwner(user)
+
+        println(pushTokens)
+        // Send notification
     }
 
     override fun registerPushToken(user: User, token: String) {
         val row = PushToken(user, token)
 
         pushTokenRepository.save(row)
+    }
+
+    override fun removePushToken(user: User, token: String) {
+        pushTokenRepository.findByOwnerAndToken(user, token)?.let {
+            pushTokenRepository.delete(it)
+        }
     }
 }

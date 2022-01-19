@@ -2,6 +2,7 @@ package com.itechart.crushon.service.impl
 
 import com.itechart.crushon.dto.user.CreateUserInputDTO
 import com.itechart.crushon.dto.user.UpdateUserDTO
+import com.itechart.crushon.integrations.firebase.FirebaseProvider
 import com.itechart.crushon.model.Match
 import com.itechart.crushon.model.User
 import com.itechart.crushon.repository.*
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.merge
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.server.ServerResponse
+import reactor.core.publisher.Mono
 import java.lang.Exception
 
 @Service
@@ -21,7 +24,8 @@ class UserServiceImpl(
     private val fileRepository: FileRepository,
     private val cityRepository: CityRepository,
     private val passionRepository: PassionRepository,
-    private val matchRepository: MatchRepository
+    private val matchRepository: MatchRepository,
+    private val firebaseProvider: FirebaseProvider
 ): UserService {
 
     override fun createUser(data: CreateUserInputDTO): User {
@@ -85,4 +89,8 @@ class UserServiceImpl(
             matchRepository.getMatchesByFirst(user).asFlow(),
             matchRepository.getMatchesBySecond(user).asFlow()
         )
+
+    override fun setFirebaseToken(user: User, token: String) {
+        firebaseProvider.cloudMessaging.registerPushToken(user, token)
+    }
 }
