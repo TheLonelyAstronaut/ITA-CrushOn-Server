@@ -21,6 +21,11 @@ class UserController(
     fun setPhoto(@AuthenticationPrincipal user: User, @RequestBody data: UpdatePhotoDTO): Long =
         userService.setPhoto(user, data.photoId)
 
+    @PostMapping("/set_firebase_token")
+    fun setFirebaseToken(@AuthenticationPrincipal user: User) {
+        // add token to firebase repository
+    }
+
     @PostMapping("/update_settings")
     fun updateSettings(@AuthenticationPrincipal user: User, @RequestBody data: UpdateUserDTO) =
         userService.updateUser(user, data)

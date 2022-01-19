@@ -5,8 +5,10 @@ import com.itechart.crushon.dto.authentication.AuthenticationOutputDTO
 import com.itechart.crushon.dto.authentication.RefreshTokensInputDTO
 import com.itechart.crushon.dto.authentication.RegistrationInputDTO
 import com.itechart.crushon.dto.user.CreateUserInputDTO
+import com.itechart.crushon.model.User
 import com.itechart.crushon.service.AuthenticationService
 import com.itechart.crushon.service.UserService
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,6 +24,11 @@ class AuthenticationController (
     @PostMapping("/authenticate")
     fun authenticate(@RequestBody data: AuthenticationInputDTO) =
         authenticationService.authenticate(data.username, data.password)
+
+    @PostMapping("/logout")
+    fun logout(@AuthenticationPrincipal user: User) {
+        // remove token from firebase repository
+    }
 
     @PostMapping("/refresh_tokens")
     fun refreshTokens(@RequestBody data: RefreshTokensInputDTO) =

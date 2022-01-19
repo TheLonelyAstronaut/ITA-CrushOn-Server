@@ -1,6 +1,7 @@
 package com.itechart.crushon.service.impl
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.itechart.crushon.integrations.firebase.FirebaseProvider
 import com.itechart.crushon.model.Chat
 import com.itechart.crushon.model.Message
 import com.itechart.crushon.model.User
@@ -18,8 +19,8 @@ import java.util.*
 class ChatServiceImpl(
     private val chatRepository: ChatRepository,
     private val messageRepository: MessageRepository,
-    private val userRepository: UserRepository,
-    private val pool: SocketConnectionPool
+    private val pool: SocketConnectionPool,
+    private val firebaseProvider: FirebaseProvider
 ): ChatService {
     override fun sendMessage(user: User, sendTo: Long, message: String): Long {
         val chat = chatRepository.findById(sendTo).get()
@@ -30,6 +31,7 @@ class ChatServiceImpl(
         val receiver = if(chat.firstUser.id === user.id) chat.secondUser else chat.firstUser
 
         pool.send(receiver.id!!, ObjectMapper().writeValueAsString(dbMessage))
+        firebaseProvider.cloudMessaging.sendNotification(user, dbMessage)
 
         return Date().time
     }

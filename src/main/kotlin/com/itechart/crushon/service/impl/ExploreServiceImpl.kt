@@ -1,6 +1,7 @@
 package com.itechart.crushon.service.impl
 
 import com.itechart.crushon.dto.explore.AddReactionOutputDTO
+import com.itechart.crushon.integrations.firebase.FirebaseProvider
 import com.itechart.crushon.model.*
 import com.itechart.crushon.repository.*
 import com.itechart.crushon.service.ExploreService
@@ -25,7 +26,8 @@ class ExploreServiceImpl(
     private val reactionRepository: ReactionRepository,
     private val matchRepository: MatchRepository,
     private val sessionFactory: SessionFactory,
-    private val chatRepository: ChatRepository
+    private val chatRepository: ChatRepository,
+    private val firebaseProvider: FirebaseProvider
 ): ExploreService {
     override fun getCities(): Flow<City> = cityRepository.findAll().asFlow()
 
@@ -110,6 +112,16 @@ class ExploreServiceImpl(
             if(dbReaction.reaction == reaction && reaction == Reactions.LIKE) {
                 matchRepository.save(Match(user, dbReactTo))
                 chatRepository.save(Chat(user, dbReactTo))
+
+                firebaseProvider
+                    .cloudMessaging
+                    .sendNotification(
+                        dbReactTo,
+                        AddReactionOutputDTO(
+                            true,
+                            user
+                        )
+                    )
 
                 AddReactionOutputDTO(
                     true,
