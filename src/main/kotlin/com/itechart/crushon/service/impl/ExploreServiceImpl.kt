@@ -89,7 +89,7 @@ class ExploreServiceImpl(
 
         return session
             .createQuery(criteria)
-            .setMaxResults(3)
+            .setMaxResults(10)
             .resultStream
             .toFlux()
             .asFlow()
@@ -120,6 +120,8 @@ class ExploreServiceImpl(
                     .cloudMessaging
                     .sendNotification(
                         dbReactTo,
+                        "Match!",
+                        user.name,
                         AddReactionOutputDTO(
                             true,
                             user

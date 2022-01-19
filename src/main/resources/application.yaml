@@ -29,3 +29,7 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type: TRACE
 
+firebase:
+  service:
+    json: ${env.FIREBASE_SERVICE_ACCOUNT_JSON_KEY}
+
