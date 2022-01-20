@@ -10,14 +10,17 @@ import com.itechart.crushon.utils.enums.Reactions
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.reactive.asFlow
 import org.hibernate.Criteria
+import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.criterion.Restrictions
 import org.springframework.stereotype.Service
 import reactor.kotlin.core.publisher.toFlux
+import javax.annotation.PostConstruct
 import javax.persistence.criteria.*
 import javax.transaction.Transactional
 
 @Service
+@Transactional
 class ExploreServiceImpl(
     private val cityRepository: CityRepository,
     private val passionRepository: PassionRepository,
@@ -29,14 +32,18 @@ class ExploreServiceImpl(
     private val chatRepository: ChatRepository,
     private val firebaseProvider: FirebaseProvider
 ): ExploreService {
+    private lateinit var session: Session
+
     override fun getCities(): Flow<City> = cityRepository.findAll().asFlow()
 
     override fun getPassions(): Flow<Passion> = passionRepository.findAll().asFlow()
 
-    @Transactional
-    override fun exploreNewPeople(user: User): Flow<User> {
-        val session = sessionFactory.openSession()
+    @PostConstruct
+    private fun initialize() {
+        this.session = sessionFactory.openSession()
+    }
 
+    override fun exploreNewPeople(user: User): Flow<User> {
         val criteria = session.criteriaBuilder.createQuery(User::class.java)
         val userRoot = criteria.from(User::class.java)
 
@@ -90,14 +97,16 @@ class ExploreServiceImpl(
         return session
             .createQuery(criteria)
             .setMaxResults(10)
-            .resultStream
-            .toFlux()
+            .list()
             .asFlow()
             .map {
                 val view = View(user, it)
                 viewRepository.save(view)
 
                 it
+            }
+            .onCompletion {
+                session.clear()
             }
     }
 
@@ -164,4 +173,3 @@ class ExploreServiceImpl(
         return subquery
     }
 }
-

@@ -15,6 +15,9 @@ class CloudMessagingProviderImpl(
 
     override fun sendNotification(user: User, title: String, body: String, data: Any) {
         val pushTokens = pushTokenRepository.findByOwner(user)
+        val tokens = pushTokens.map { it.token }
+
+        if(tokens.isEmpty()) return
 
         val message = MulticastMessage
             .builder()
@@ -27,7 +30,7 @@ class CloudMessagingProviderImpl(
                     .build()
             )
             .putData("data", ObjectMapper().writeValueAsString(data))
-            .addAllTokens(pushTokens.map { it.token })
+            .addAllTokens(tokens)
             .build()
 
         FirebaseMessaging.getInstance().sendMulticast(message)
