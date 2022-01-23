@@ -1,6 +1,7 @@
 package com.itechart.crushon.service.impl
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.itechart.crushon.dto.chat.SendMessageOutputDTO
 import com.itechart.crushon.integrations.firebase.FirebaseProvider
 import com.itechart.crushon.model.Chat
 import com.itechart.crushon.model.Message
@@ -22,7 +23,7 @@ class ChatServiceImpl(
     private val pool: SocketConnectionPool,
     private val firebaseProvider: FirebaseProvider
 ): ChatService {
-    override fun sendMessage(user: User, sendTo: Long, message: String): Long {
+    override fun sendMessage(user: User, sendTo: Long, message: String): SendMessageOutputDTO {
         val chat = chatRepository.findById(sendTo).get()
 
         val dbMessage = Message(user, message, Date().time, chat)
@@ -30,10 +31,20 @@ class ChatServiceImpl(
 
         val receiver = if(chat.firstUser.id === user.id) chat.secondUser else chat.firstUser
 
-        pool.send(receiver.id!!, ObjectMapper().writeValueAsString(dbMessage))
+        pool.send(receiver.id!!, ObjectMapper().writeValueAsString(object {
+            val id = dbMessage.id
+            val text = dbMessage.text
+            val timestamp = dbMessage.timestamp
+            val sender = dbMessage.sender
+            val chatId = sendTo
+        }));
+
         firebaseProvider.cloudMessaging.sendNotification(receiver, user.name, message, dbMessage)
 
-        return Date().time
+        return SendMessageOutputDTO(
+            dbMessage.timestamp,
+            dbMessage.id!!
+        )
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -50,7 +61,13 @@ class ChatServiceImpl(
             if(lastMessage != null) {
                 chat.messages.add(lastMessage)
             } else {
-                chat.messages.add(Message(user, "No messages yet...", Date().time, it))
+                val message = Message(user, "No messages yet...", Date().time, it)
+                val firstUserId = it.firstUser.id!!.toString()
+                val secondUserId = it.secondUser.id!!.toString()
+
+                message.id = "-${firstUserId}${secondUserId}".toLong()
+
+                chat.messages.add(message)
             }
 
             chat

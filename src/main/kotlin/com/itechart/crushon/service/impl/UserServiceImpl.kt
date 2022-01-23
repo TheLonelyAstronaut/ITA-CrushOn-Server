@@ -44,6 +44,10 @@ class UserServiceImpl(
         return user
     }
 
+    override fun getUser(id: Long): User {
+        return userRepository.findById(id).get()
+    }
+
     override fun setPhoto(user: User, photoId: Long): Long {
         try {
             user.photo = fileRepository.findFileById(photoId)

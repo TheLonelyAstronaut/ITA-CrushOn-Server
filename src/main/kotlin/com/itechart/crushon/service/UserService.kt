@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono
 
 interface UserService {
     fun createUser(data: CreateUserInputDTO): User
+    fun getUser(id: Long): User
     fun setPhoto(user: User, photoId: Long): Long
     fun updateUser(user: User, data: UpdateUserDTO): User
     fun getMatches(user: User): Flow<Match>

@@ -26,7 +26,7 @@ class CloudMessagingProviderImpl(
                     .builder()
                     .setBody(body)
                     .setTitle(title)
-                    .setImage("https://ita-crushon-bucket.s3.eu-central-1.amazonaws.com/placeholder.png")
+                    .setImage(user.photo.link)
                     .build()
             )
             .putData("data", ObjectMapper().writeValueAsString(data))

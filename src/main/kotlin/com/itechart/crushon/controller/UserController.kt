@@ -23,6 +23,10 @@ class UserController(
     fun getUser(@AuthenticationPrincipal user: User) =
         user
 
+    @GetMapping("/{id}")
+    fun getUser(@PathVariable("id") id: Long) =
+        userService.getUser(id)
+
     @PostMapping("/set_photo")
     fun setPhoto(@AuthenticationPrincipal user: User, @RequestBody data: UpdatePhotoDTO) =
         userService.setPhoto(user, data.photoId)
